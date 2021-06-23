@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang=en>
+
+<head>
+	<meta charset=utf-8>
+	<title>HA Config Tool</title>
+</head>
+
+<body style="text-align: center;">
+	<h1>HA Config Tool</h1>
+
+	<h3>Please inform the home assistant address</h3>
+	<input type="text" id="homeAddress" placeholder="192.168.0.1" />
+	<button id="getConfig">Get Configs</button>
+	<button id="updateConfig">Update Configs</button>
+	<button id="addSwitch">Add Switch</button>
+	<h3 id="switches">Switches</h3>
+</body>
+
+</html>
+
+<script>
+	const getConfigBtn = document.getElementById("getConfig")
+	getConfigBtn.addEventListener("click", getConfig)
+
+	const updateConfigBtn = document.getElementById("updateConfig")
+	updateConfigBtn.addEventListener("click", updateConfig)
+
+	const addSwitchBtn = document.getElementById("addSwitch")
+	addSwitchBtn.addEventListener("click", addSwitch)
+
+	let homeAddr
+
+	async function getConfig() {
+		homeAddr = document.getElementById("homeAddress")
+		if (homeAddr.value == "") {
+			alert("Please inform the HA address")
+			return
+		}
+
+		response = await fetch(`http://${homeAddr.value}:5000/switches`)
+
+		renderSwitches(await response.json())
+	}
+
+	async function updateConfig() {
+		const homeAddr = document.getElementById("homeAddress")
+		if (homeAddr.value == "") {
+			alert("Please inform the HA address")
+			return
+		}
+
+		const swElem = Array.from(document.getElementsByClassName("switch"))
+		const swConfig = swElem.
+			map((e) => {
+				const obj = {}
+				Array.from(e.childNodes).
+					filter(e => e.childElementCount > 0).
+					forEach((elem) => {
+						const k = elem.getElementsByClassName("name")[0].innerText
+						const v = elem.getElementsByClassName("value")[0].value
+
+						switch (k) {
+							case "qos":
+								obj[k] = parseInt(v, 10)
+								break;
+							case "retain":
+								obj[k] = v == "true"
+									? true
+									: false
+								break;
+							default:
+								obj[k] = v
+								break;
+						}
+					})
+				return obj
+			})
+
+		if (homeAddr.value == "") {
+			alert("Please inform the HA address")
+			return
+		}
+
+		reqBody = JSON.stringify({ switch: swConfig })
+		response = await fetch(`http://${homeAddr.value}:5000/switches`, {
+			method: 'PUT',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: reqBody,
+		})
+
+		if (response.ok) {
+			alert('Updated successfully')
+		} else {
+			alert('Error updating switch configuration')
+		}
+	}
+
+	function renderSwitches(sw) {
+		switches = sw.switch
+
+		const swList = document.getElementById("sw-list")
+		if (swList != null) {
+			const parent = swList.parentElement
+			parent.removeChild(swList)
+		}
+
+		let html = `<div id="sw-list">`
+
+		const swHtml = switches.map(((e, i) => {
+			html += `<div id="switch-${i}" class="switch" style="padding-top: 1rem;">`
+			html += `<h4>${"Switch " + i}</h5 >`
+			html += `<button id=${"delete" + i} class="delete">Delete</button>`
+			for (k in e) {
+				html += '<div>'
+				html += `<div id = "label-${k}-${i}" class="name" style = "padding-top: 0.5rem;">${k}</div>`
+				html += `<input type = "text" id = "value-${k}-${i}" class="value" value = "${e[k]}" />`
+				html += '</div>'
+			}
+			html += `</div >`
+			return html
+		}))
+		html += `</div >`
+
+		const domSw = document.getElementById("switches")
+		domSw.insertAdjacentHTML("afterend", html)
+
+		addDeletersListeners()
+	}
+
+	function addDeletersListeners() {
+		const deleters = Array.from(document.getElementsByClassName("delete"))
+		deleters.forEach((d) => {
+			d.removeEventListener('click', deleteSwitch)
+			d.addEventListener("click", deleteSwitch)
+		})
+	}
+
+	function deleteSwitch(e) {
+		const sw = e.target.parentElement
+		const parent = sw.parentElement
+		parent.removeChild(sw)
+	}
+
+	function addSwitch() {
+		const swList = document.getElementById("sw-list")
+		let index = swList && swList.childElementCount || 0
+		let html = ''
+
+		html += `<div id="switch-${index}" class="switch" style="padding-top: 1rem;">`
+		html += `<h4>Switch ${index}</h4>`
+		html += `<button id="delete${index}" class="delete">Delete</button>`
+		html += `<div>`
+		html += `<div id="label-platform-${index}" class="name" style="padding-top: 0.5rem;">platform</div>`
+		html += `<input type="text" id="value-platform-${index}" class="value" value="mqtt">`
+		html += `</div>`
+		html += `<div>`
+		html += `<div id="label-name-${index}" class="name" style="padding-top: 0.5rem;">name</div>`
+		html += `<input type="text" id="value-name-${index}" class="value" value="">`
+		html += `</div>`
+		html += `<div>`
+		html += `<div id="label-unique_id-${index}" class="name" style="padding-top: 0.5rem;">unique_id</div>`
+		html += `<input type="text" id="value-unique_id-${index}" class="value" value="">`
+		html += `</div>`
+		html += `<div>`
+		html += `<div id="label-command_topic-${index}" class="name" style="padding-top: 0.5rem;">command_topic</div>`
+		html += `<input type="text" id="value-command_topic-${index}" class="value" value="cmnd/?/POWER">`
+		html += `</div>`
+		html += `<div>`
+		html += `<div id="label-state_topic-${index}" class="name" style="padding-top: 0.5rem;">state_topic</div>`
+		html += `<input type="text" id="value-state_topic-${index}" class="value" value="stat/?/POWER">`
+		html += `</div>`
+		html += `<div>`
+		html += `<div id="label-availability_topic-${index}" class="name" style="padding-top: 0.5rem;">availability_topic</div>`
+		html += `<input type="text" id="value-availability_topic-${index}" class="value" value="tele/?/LWT">`
+		html += `</div>`
+		html += `<div>`
+		html += `<div id="label-payload_on-${index}" class="name" style="padding-top: 0.5rem;">payload_on</div>`
+		html += `<input type="text" id="value-payload_on-${index}" class="value" value="ON">`
+		html += `</div>`
+		html += `<div>`
+		html += `<div id="label-payload_off-${index}" class="name" style="padding-top: 0.5rem;">payload_off</div>`
+		html += `<input type="text" id="value-payload_off-${index}" class="value" value="OFF">`
+		html += `</div>`
+		html += `<div>`
+		html += `<div id="label-payload_available-${index}" class="name" style="padding-top: 0.5rem;">payload_available</div>`
+		html += `<input type="text" id="value-payload_available-${index}" class="value" value="Online">`
+		html += `</div>`
+		html += `<div>`
+		html += `<div id="label-payload_not_available-${index}" class="name" style="padding-top: 0.5rem;">payload_not_available</div>`
+		html += `<input type="text" id="value-payload_not_available-${index}" class="value" value="Offline">`
+		html += `</div>`
+		html += `<div>`
+		html += `<div id="label-qos-${index}" class="name" style="padding-top: 0.5rem;">qos</div>`
+		html += `<input type="text" id="value-qos-${index}" class="value" value="1">`
+		html += `</div>`
+		html += `<div>`
+		html += `<div id="label-retain-${index}" class="name" style="padding-top: 0.5rem;">retain</div>`
+		html += `<input type="text" id="value-retain-${index}" class="value" value="false">`
+		html += `</div>`
+		html += `</div>`
+
+		if (swList == null) {
+			newHtml = `<div id="sw-list">` + html
+			const domSw = document.getElementById("switches")
+			domSw.insertAdjacentHTML("afterend", newHtml)
+		} else if (swList.childElementCount > 0) {
+			swList.lastChild.insertAdjacentHTML('afterend', html)
+		} else {
+			swList.innerHTML = html
+		}
+
+		addDeletersListeners()
+	}
+</script>

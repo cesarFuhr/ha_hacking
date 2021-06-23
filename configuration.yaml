@@ -1,0 +1,20 @@
+default_config: null
+tts:
+- platform: google_translate
+group: groups.yaml
+automation: automations.yaml
+script: scripts.yaml
+scene: scenes.yaml
+switch:
+- platform: mqtt
+  name: Test Switch
+  unique_id: test_unique_id
+  command_topic: cmnd/light/POWER
+  state_topic: stat/light/POWER
+  availability_topic: tele/light/LWT
+  payload_on: "ON"
+  payload_off: "OFF"
+  payload_available: Online
+  payload_not_available: Offline
+  qos: 1
+  retain: false
