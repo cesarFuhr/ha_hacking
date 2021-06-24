@@ -168,54 +168,53 @@
 		html += `<div id="switch-${index}" class="switch">`
 		html += `<h4>Switch ${index}</h4>`
 		html += `<button id="delete${index}" class="delete">Delete</button>`
-		html += `<div>`
+		html += '<div class="prop">'
 		html += `<div id="label-platform-${index}" class="name" style="padding-top: 0.5rem;">platform</div>`
 		html += `<input type="text" id="value-platform-${index}" class="value" value="mqtt">`
 		html += `</div>`
-		html += `<div>`
+		html += '<div class="prop">'
 		html += `<div id="label-name-${index}" class="name" style="padding-top: 0.5rem;">name</div>`
 		html += `<input type="text" id="value-name-${index}" class="value" value="">`
 		html += `</div>`
-		html += `<div>`
+		html += '<div class="prop">'
 		html += `<div id="label-unique_id-${index}" class="name" style="padding-top: 0.5rem;">unique_id</div>`
 		html += `<input type="text" id="value-unique_id-${index}" class="value" value="">`
 		html += `</div>`
-		html += `<div>`
+		html += '<div class="prop">'
 		html += `<div id="label-command_topic-${index}" class="name" style="padding-top: 0.5rem;">command_topic</div>`
 		html += `<input type="text" id="value-command_topic-${index}" class="value" value="cmnd/?/POWER">`
 		html += `</div>`
-		html += `<div>`
+		html += '<div class="prop">'
 		html += `<div id="label-state_topic-${index}" class="name" style="padding-top: 0.5rem;">state_topic</div>`
 		html += `<input type="text" id="value-state_topic-${index}" class="value" value="stat/?/POWER">`
 		html += `</div>`
-		html += `<div>`
+		html += '<div class="prop">'
 		html += `<div id="label-availability_topic-${index}" class="name" style="padding-top: 0.5rem;">availability_topic</div>`
 		html += `<input type="text" id="value-availability_topic-${index}" class="value" value="tele/?/LWT">`
 		html += `</div>`
-		html += `<div>`
+		html += '<div class="prop">'
 		html += `<div id="label-payload_on-${index}" class="name" style="padding-top: 0.5rem;">payload_on</div>`
 		html += `<input type="text" id="value-payload_on-${index}" class="value" value="ON">`
 		html += `</div>`
-		html += `<div>`
+		html += '<div class="prop">'
 		html += `<div id="label-payload_off-${index}" class="name" style="padding-top: 0.5rem;">payload_off</div>`
 		html += `<input type="text" id="value-payload_off-${index}" class="value" value="OFF">`
 		html += `</div>`
-		html += `<div>`
+		html += '<div class="prop">'
 		html += `<div id="label-payload_available-${index}" class="name" style="padding-top: 0.5rem;">payload_available</div>`
 		html += `<input type="text" id="value-payload_available-${index}" class="value" value="Online">`
 		html += `</div>`
-		html += `<div>`
+		html += '<div class="prop">'
 		html += `<div id="label-payload_not_available-${index}" class="name" style="padding-top: 0.5rem;">payload_not_available</div>`
 		html += `<input type="text" id="value-payload_not_available-${index}" class="value" value="Offline">`
 		html += `</div>`
-		html += `<div>`
+		html += '<div class="prop">'
 		html += `<div id="label-qos-${index}" class="name" style="padding-top: 0.5rem;">qos</div>`
 		html += `<input type="text" id="value-qos-${index}" class="value" value="1">`
 		html += `</div>`
-		html += `<div>`
+		html += '<div class="prop">'
 		html += `<div id="label-retain-${index}" class="name" style="padding-top: 0.5rem;">retain</div>`
 		html += `<input type="text" id="value-retain-${index}" class="value" value="false">`
-		html += `</div>`
 		html += `</div>`
 
 		if (swList == null) {
