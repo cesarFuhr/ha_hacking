@@ -38,3 +38,12 @@ func ActivateConfig(path string) error {
 
 	return nil
 }
+
+func FetchConfig(path string) error {
+	err := exec.Command("/bin/bash", "-c", "docker cp homeassistant:config/configuration.yaml "+path).Run()
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

@@ -7,6 +7,10 @@ import (
 
 func main() {
 
+	if err := FetchConfig("configuration.yaml"); err != nil {
+		panic(err)
+	}
+
 	server := NewHTTPServer()
 
 	if err := server.ListenAndServe(); err != http.ErrServerClosed {

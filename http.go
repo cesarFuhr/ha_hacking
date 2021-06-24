@@ -75,15 +75,24 @@ func handlePut(w http.ResponseWriter, r *http.Request) {
 	yamlMap := yaml.MapSlice{}
 	yaml.Unmarshal(b, &yamlMap)
 
+	switchIndex := -1
 	for i := range yamlMap {
 		if yamlMap[i].Key == "switch" {
-			sw := []yaml.MapSlice{}
-			for j := range conf.Switch {
-				sw = append(sw, conf.Switch[j].ToMapSlice())
-			}
-			yamlMap[i].Value = sw
+			switchIndex = i
 			break
 		}
+	}
+
+	sws := []yaml.MapSlice{}
+	for j := range conf.Switch {
+		sws = append(sws, conf.Switch[j].ToMapSlice())
+	}
+
+	if switchIndex >= 0 {
+		yamlMap[switchIndex].Value = sws
+	} else {
+		sw := yaml.MapItem{Key: "switch", Value: sws}
+		yamlMap = append(yamlMap, sw)
 	}
 
 	err = WriteConfig("configuration.yaml", yamlMap)

@@ -4,6 +4,22 @@
 <head>
 	<meta charset=utf-8>
 	<title>HA Config Tool</title>
+	<style>
+		.switch {
+			width: fit-content;
+			margin: 1% auto 5%;
+			padding: 2% 2% 2% 2%;
+			box-shadow: 3px 3px 20px rgba(0, 0, 0, .5);
+			text-align: center;
+		}
+		.prop {
+			width: fit-content;
+			margin: 10px auto;
+			padding: 1% 1% 1% 1%;
+			box-shadow: 3px 3px 6px rgba(0, 0, 0, .5);
+			text-align: center;
+		}
+	</style>
 </head>
 
 <body style="text-align: center;">
@@ -107,14 +123,14 @@
 			parent.removeChild(swList)
 		}
 
-		let html = `<div id="sw-list">`
+		let html = `<div id="sw-list" style="text-align: center;">`
 
 		const swHtml = switches.map(((e, i) => {
-			html += `<div id="switch-${i}" class="switch" style="padding-top: 1rem;">`
+			html += `<div id="switch-${i}" class="switch">`
 			html += `<h4>${"Switch " + i}</h5 >`
 			html += `<button id=${"delete" + i} class="delete">Delete</button>`
 			for (k in e) {
-				html += '<div>'
+				html += '<div class="prop">'
 				html += `<div id = "label-${k}-${i}" class="name" style = "padding-top: 0.5rem;">${k}</div>`
 				html += `<input type = "text" id = "value-${k}-${i}" class="value" value = "${e[k]}" />`
 				html += '</div>'
@@ -149,7 +165,7 @@
 		let index = swList && swList.childElementCount || 0
 		let html = ''
 
-		html += `<div id="switch-${index}" class="switch" style="padding-top: 1rem;">`
+		html += `<div id="switch-${index}" class="switch">`
 		html += `<h4>Switch ${index}</h4>`
 		html += `<button id="delete${index}" class="delete">Delete</button>`
 		html += `<div>`
@@ -203,7 +219,7 @@
 		html += `</div>`
 
 		if (swList == null) {
-			newHtml = `<div id="sw-list">` + html
+			newHtml = `<div id="sw-list" style="text-align: center;">` + html
 			const domSw = document.getElementById("switches")
 			domSw.insertAdjacentHTML("afterend", newHtml)
 		} else if (swList.childElementCount > 0) {
