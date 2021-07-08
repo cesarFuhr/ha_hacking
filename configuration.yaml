@@ -7,7 +7,7 @@ script: scripts.yaml
 scene: scenes.yaml
 switch:
 - platform: mqtt
-  name: Test Switch
+  name: Switch Test Estágio
   unique_id: test_unique_id
   command_topic: cmnd/light/POWER
   state_topic: stat/light/POWER
